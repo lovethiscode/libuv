@@ -10,7 +10,7 @@ include(CMakePackageConfigHelpers)
 include(CMakeDependentOption)
 include(CheckCCompilerFlag)
 include(GNUInstallDirs)
-include(CTest)
+#include(CTest)
 
 set(CMAKE_C_VISIBILITY_PRESET hidden)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -388,7 +388,7 @@ if(APPLE OR CMAKE_SYSTEM_NAME MATCHES "DragonFly|FreeBSD|Linux|NetBSD|OpenBSD")
   list(APPEND uv_test_libraries util)
 endif()
 
-add_library(uv SHARED ${uv_sources})
+#[[add_library(uv SHARED ${uv_sources})
 target_compile_definitions(uv
   INTERFACE
     USING_UV_SHARED=1
@@ -407,7 +407,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "OS390")
   set_target_properties(uv PROPERTIES LINKER_LANGUAGE CXX)
 endif()
 target_link_libraries(uv ${uv_libraries})
-
+]]
 add_library(uv_a STATIC ${uv_sources})
 target_compile_definitions(uv_a PRIVATE ${uv_defines})
 target_compile_options(uv_a PRIVATE ${uv_cflags})
@@ -668,15 +668,16 @@ file(STRINGS configure.ac configure_ac REGEX ^AC_INIT)
 string(REGEX MATCH "([0-9]+)[.][0-9]+[.][0-9]+" PACKAGE_VERSION "${configure_ac}")
 set(UV_VERSION_MAJOR "${CMAKE_MATCH_1}")
 # The version in the filename is mirroring the behaviour of autotools.
-set_target_properties(uv PROPERTIES
+#[[set_target_properties(uv PROPERTIES
   VERSION ${UV_VERSION_MAJOR}.0.0
   SOVERSION ${UV_VERSION_MAJOR})
+  ]]
 set(includedir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
 set(libdir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(prefix ${CMAKE_INSTALL_PREFIX})
 configure_file(libuv.pc.in libuv.pc @ONLY)
 configure_file(libuv-static.pc.in libuv-static.pc @ONLY)
-
+#[[
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_DOCDIR})
 install(FILES ${PROJECT_BINARY_DIR}/libuv.pc ${PROJECT_BINARY_DIR}/libuv-static.pc
@@ -687,7 +688,7 @@ install(TARGETS uv EXPORT libuvConfig
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(TARGETS uv_a EXPORT libuvConfig
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(EXPORT libuvConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libuv)
+install(EXPORT libuvConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libuv)]]
 
 if(MSVC)
   set(CMAKE_DEBUG_POSTFIX d)
